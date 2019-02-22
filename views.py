@@ -10,19 +10,19 @@ from core.models import Admin, Orders, Products, ProductLevel, ProductView, User
 from forms import LoginForm, RegisterForm, MessageForm, OrderForm, UpdateRegisterForm, DeveloperForm, RequestForm
 import string
 import paypalrestsdk
-from selenium import webdriver
+# from selenium import webdriver
 import logging
 
-options = webdriver.ChromeOptions()
-options.add_argument('headless')
-options.add_experimental_option("prefs", {
-  "download.default_directory": "./download/",
-  "download.prompt_for_download": False,
-})
-driver = webdriver.Chrome(chrome_options=options)
-driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
-params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': "./download/"}}
-command_result = driver.execute("send_command", params)
+# options = webdriver.ChromeOptions()
+# options.add_argument('headless')
+# options.add_experimental_option("prefs", {
+#   "download.default_directory": "./download/",
+#   "download.prompt_for_download": False,
+# })
+# # driver = webdriver.Chrome(chrome_options=options)
+# driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+# params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': "./download/"}}
+# command_result = driver.execute("send_command", params)
 
 paypalrestsdk.configure({
       "mode": "sandbox", # sandbox or live
@@ -1125,13 +1125,14 @@ def callbacks():
         if resp['ResultCode'] == "0":
             if 'pid' in session:
                 prod = Products.query.filter_by(id=session['pid']).first()
-                driver.get(prod.link)
-                try:
-                    download = driver.find_element_by_class_name('downloadButton')
-                    download.click()
-                except:
-                    print(prod.link)
-                    return '<a href="/"> {} </a>'.format(prod.link)
+                return render_template('link.html', product=prod)
+                # driver.get(prod.link)
+                # try:
+                #     download = driver.find_element_by_class_name('downloadButton')
+                #     download.click()
+                # except:
+                #     print(prod.link)
+                #     return '<a href="/"> {} </a>'.format(prod.link)
 
             print(request.json)
 
