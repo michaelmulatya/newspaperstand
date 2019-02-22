@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+{% block body %}
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 my-4">
+            <div class="list-group">
+                <a href="/magazines" class="list-group-item">Magazines</a>
+                <a href="/comics" class="list-group-item">Comics</a>
+                <a href="/textbooks" class="list-group-item">Textbooks</a>
+                <a href="/newspapers" class="list-group-item">Newspapers</a>
+            </div>
+        </div>
+        <!-- /.col-lg-3 -->
+        <div class="col-lg-9">
+            <div class="row">
+                {% for product in products %}
+                <div class="col-lg-6">
+                    <div class="card mt-4">
+                        <img class="card-img-top img-fluid"
+                             src="static/image/product/{{product.category}}/{{product.picture}}" alt="">
+                    </div>
+                </div>
+                <!-- /.card -->
+                <div class="col-lg-6">
+                    <div class="card card-outline-secondary my-4">
+                        <div class="card-header">
+                            Order Details
+                        </div>
+                        <div class="card-body">
+                            {% from "includes/_formhelpers.html" import render_field %}
+                            <form method="POST" action="/{{product.category}}?order={{product.id}}">
+                                <div class="form-group">
+{#                                    {{ form.name.label }}#}
+                                    {{render_field(form.name, class_="form-control")}}
+                                </div>
+                                <div class="form-group">
+{#                                    {{ form.mobile_num.label }}#}
+                                    {{render_field(form.mobile_num, class_="form-control")}}
+                                </div>
+
+                                <div class="form-group">
+{#                                    {{ form.email.label }}#}
+                                    {{render_field(form.email, class_="form-control")}}
+                                </div>
+                                <h6>Price Kshs. {{ product.price }} equivalent to 1$</h6>
+                                <button type="submit" class="btn btn-success btn-block">Pay Via Mpesa</button><br>
+                                 <div id="paypal-button"></div>
+
+                                <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+                                <script>
+                                    var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/payment';
+                                    var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/execute';
+
+                                    paypal.Button.render({
+
+                                        env: 'sandbox', // Or 'sandbox'
+
+                                        commit: true, // Show a 'Pay Now' button
+
+                                        payment: function() {
+                                            return paypal.request.post(CREATE_PAYMENT_URL).then(function(data) {
+                                                return data.paymentID;
+                                            });
+                                        },
+
+                                        onAuthorize: function(data) {
+                                            return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                                                paymentID: data.paymentID,
+                                                payerID:   data.payerID
+                                            }).then(function(res) {
+
+                                                console.log(res.success)
+                                                // The payment is complete!
+                                                // You can now show a confirmation message to the customer
+                                            });
+                                        }
+
+                                    }, '#paypal-button');
+                                </script>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- /.card -->
+
+            </div>
+            {% if x == '' %}
+            <h2 class="mb-4">No recommendation found</h2>
+            {% else%}
+            <h2 class="mb-4">Recommended for you:</h2>
+            <div class="row">
+                {% for product in x %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card mb-4">
+                        <a href="/{{product.category}}?view={{product.id}}">
+                            <div class="card-img-top id_{{product.id}}"
+                                 style="background: url('static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:200px;width:100% "></div>
+                        </a>
+                        <div class="card-body">
+                            <h5><a class="card-title" href="/{{product.category}}?view={{product.id}}">{{
+                                product.pName}}</a></h5>
+                            <h4>Kshs.{{product.price}}</h4>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <!-- /.col-lg-9 -->
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+{% endblock %}

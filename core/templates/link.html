@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container col-md-5">
+              <h3>Download</h3>
+
+    <div class="card">
+        <a class="btn btn-primary mt-4" href="{{ product.link }}" role="button">Download File</a><br>
+        <img class="card-img-top img-fluid"
+             src="static/image/product/{{product.category}}/{{product.picture}}" alt="{{ product.pName }}">
+        <h4>Get your file here</h4>
+          <a class="btn btn-primary mt-4" href="{{ product.link }}" role="button">Download File</a>
+    </div><br>
+
+</div>
+</div>
+{% endblock %}
