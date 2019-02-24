@@ -812,7 +812,7 @@ def admin_add_product():
                     # product_id = curs.lastrowid
                     product_id = product.id
                     # curs.execute("INSERT INTO product_level(product_id)" "VALUES(%s)", [product_id])
-                    prod_lvl = ProductLevel(product_id=product_id, v_shape='no', polo='no', clean_text='yes', design='yes', chain='yes', leather='yes', hook='no', color='no', formal='yes', converse='no',loafer='no')
+                    prod_lvl = ProductLevel(product_id=product_id, v_shape='no', polo='no', design='yes', chain='yes', leather='yes', hook='no', color='no', formal='yes', converse='no',loafer='no',clean_String='yes')
                     db.session.add(prod_lvl)
                     db.session.commit()
                     if category == 'magazines':
@@ -1076,27 +1076,27 @@ def settings():
 
 @app.route('/developer', methods=['POST', 'GET'])
 def developer():
-    # # id = session['pid']
-    # # print(id)
-    # prod = Products.query.filter_by(id=38).first()
-    # print(prod.link)
-    form = DeveloperForm(request.form)
-    if request.method == 'POST' and form.validate():
-        q = form.id.data
-        # curso = mysql.connection.cursor()
-        # result = curso.execute("SELECT * FROM products WHERE id=%s", (q,))
-        result = Products.query.filter_by(id= q)
-        if result > 0:
-            x = content_based_filtering(q)
-            wrappered = wrappers(content_based_filtering, q)
-            execution_time = timeit.timeit(wrappered, number=0)
-            seconds = ((execution_time / 1000) % 60)
-            return render_template('developer.html', form=form, x=x, execution_time=seconds)
-        else:
-            nothing = 'Nothing found'
-            return render_template('developer.html', form=form, nothing=nothing)
-    else:
-        return render_template('modal_order.html', form=form)
+    # id = session['pid']
+    # print(id)
+    prod = Products.query.filter_by(id=1).first()
+    print(prod.link)
+    # form = DeveloperForm(request.form)
+    # if request.method == 'POST' and form.validate():
+    #     q = form.id.data
+    #     # curso = mysql.connection.cursor()
+    #     # result = curso.execute("SELECT * FROM products WHERE id=%s", (q,))
+    #     result = Products.query.filter_by(id= q)
+    #     if result > 0:
+    #         x = content_based_filtering(q)
+    #         wrappered = wrappers(content_based_filtering, q)
+    #         execution_time = timeit.timeit(wrappered, number=0)
+    #         seconds = ((execution_time / 1000) % 60)
+    #         return render_template('developer.html', form=form, x=x, execution_time=seconds)
+    #     else:
+    #         nothing = 'Nothing found'
+    #         return render_template('developer.html', form=form, nothing=nothing)
+    # else:
+    return render_template('link.html', product=prod)
 
 
 @app.route('/requests', methods=['GET', 'POST'])
