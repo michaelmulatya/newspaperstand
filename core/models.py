@@ -172,4 +172,4 @@ class Request(db.Model):
         self.description = description
         self.status = status
 
-wa.whoosh_index(app, Products)
+# wa.whoosh_index(app, Products)

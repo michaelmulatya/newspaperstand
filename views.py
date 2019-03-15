@@ -49,7 +49,7 @@ paypalrestsdk.configure({
 core = Blueprint('core',__name__)
 
 #request.base_url
-pesa = Mpesa('newspaperstand.herokuapp.com',"174379")
+pesa = Mpesa('bdc8ff6c.ngrok.io',"174379")
 
 def is_logged_in(f):
     @wraps(f)
