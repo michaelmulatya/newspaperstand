@@ -12,8 +12,6 @@ import string
 import paypalrestsdk
 import requests
 import json
-
-
 import boto3
 from botocore.client import Config
 

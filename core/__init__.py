@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cdn import CDN
 import paypalrestsdk
 
-import flask_whooshalchemy as wa
+
 
 
 app = Flask(__name__)

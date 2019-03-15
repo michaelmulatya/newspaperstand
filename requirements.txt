@@ -33,7 +33,7 @@ Flask-S3==0.3.3
 Flask-SQLAlchemy==2.3.2
 Flask-Uploads==0.2.1
 Flask-Webpack==0.1.0
-Flask-WhooshAlchemy==0.56
+flask-whooshalchemy3==0.1.1
 Flask-WTF==0.14.2
 gcloud==0.18.3
 google-api-core==1.8.0
@@ -103,5 +103,5 @@ validators==0.12.3
 virtualenv==16.0.0
 Werkzeug==0.14.1
 whitenoise==4.1.2
-Whoosh==2.7.4
+Whoosh==2.7.0
 WTForms==2.2.1

@@ -1,6 +1,7 @@
-from core import db, wa, app
+from core import db, app
+import flask_whooshalchemy as wa
 from datetime import datetime
-
+from whoosh.analysis import StemmingAnalyzer
 
 class Admin(db.Model):
     __tablename__ = 'admin'
@@ -47,6 +48,7 @@ class Orders(db.Model):
 
 class Products(db.Model):
     __searchable__ = ['pName','pubdate','description']
+    __analyzer__ = StemmingAnalyzer()
 
     id = db.Column(db.Integer, primary_key=True)
     pName = db.Column(db.String(100))
