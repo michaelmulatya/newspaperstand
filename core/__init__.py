@@ -3,8 +3,10 @@ import os
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_cdn import CDN
 import paypalrestsdk
 
+import flask_whooshalchemy as wa
 
 
 app = Flask(__name__)
@@ -13,9 +15,15 @@ app.config['UPLOADED_PHOTOS_DEST'] = 'core/static/image/product'
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
-
+app.config['CDN_DOMAIN'] = 's3.us-east-2.amazonaws.com'
+CDN(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+# STATIC_ROOT = os.path.join(basedir, 'staticfiles')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(basedir, 'static'),
+# )
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.sqlite')
 POSTGRES = {
     'user': 'crhwmuskdlrkvy',
@@ -27,7 +35,8 @@ POSTGRES = {
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:\
 %(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= True
+app.config['WHOOSH_BASE'] = 'whoosh'
 db = SQLAlchemy(app)
 Migrate(app,db)
 

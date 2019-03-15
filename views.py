@@ -1,7 +1,7 @@
 import datetime
 import timeit
 from functools import wraps
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from flask import render_template, flash, redirect, url_for, session, request, Blueprint, send_file,jsonify
 from passlib.hash import sha256_crypt
 from cash import Mpesa
@@ -10,8 +10,25 @@ from core.models import Admin, Orders, Products, ProductLevel, ProductView, User
 from forms import LoginForm, RegisterForm, MessageForm, OrderForm, UpdateRegisterForm, DeveloperForm, RequestForm
 import string
 import paypalrestsdk
-# from selenium import webdriver
-import logging
+import requests
+import json
+
+
+import boto3
+from botocore.client import Config
+
+ACCESS_KEY_ID = 'AKIAIPEPT7GFYD5VOZRQ'
+ACCESS_SECRET_KEY = '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'
+BUCKET_NAME = 'wanderift'
+
+s3 = boto3.resource(
+    's3',
+    aws_access_key_id=ACCESS_KEY_ID,
+    aws_secret_access_key=ACCESS_SECRET_KEY,
+    config=Config(signature_version='s3v4')
+)
+
+
 
 # options = webdriver.ChromeOptions()
 # options.add_argument('headless')
@@ -34,7 +51,7 @@ paypalrestsdk.configure({
 core = Blueprint('core',__name__)
 
 #request.base_url
-pesa = Mpesa('84086aa7.ngrok.io',"174379")
+pesa = Mpesa('newspaperstand.herokuapp.com',"174379")
 
 def is_logged_in(f):
     @wraps(f)
@@ -106,7 +123,7 @@ def content_based_filtering(product_id):
     # id_level = cur.fetchone()
     id_level = ProductLevel.query.filter_by(id = product_id).first()
     recommend_id = []
-    cate_level = ['v_shape', 'polo', 'clean_text', 'design', 'leather', 'color', 'formal', 'converse', 'loafer', 'hook',
+    cate_level = ['v_shape', 'polo', 'clean_String', 'design', 'leather', 'color', 'formal', 'converse', 'loafer', 'hook',
                   'chain']
     for product_f in cat_product:
         # cur.execute("SELECT * FROM product_level WHERE product_id=%s", (product_f['id'],))
@@ -123,12 +140,13 @@ def content_based_filtering(product_id):
     print('Total recommendation found: ' + str(recommend_id))
     if recommend_id:
         # cur = mysql.connection.cursor()
-        placeholders = ','.join((str(n) for n in recommend_id))
+        # placeholders = ','.join((str(n) for n in recommend_id))
         # print(placeholders)
+
         # query = 'SELECT * FROM products WHERE id IN (%s)' % placeholders
         # cur.execute(query)
         # recommend_list = cur.fetchall()
-        recommend_list = Products.query.filter(Products.id.in_(placeholders)).all()
+        recommend_list = Products.query.filter(Products.id.in_(recommend_id)).all()
         return recommend_list, recommend_id, category_matched, product_id
     else:
         return ''
@@ -369,7 +387,8 @@ def magazines():
     # cur.execute("SELECT * FROM products WHERE category=%s ORDER BY id ASC", (values,))
     # products = cur.fetchall()
     # Close Connection
-    products = Products.query.filter_by(category = values).order_by(Products.id.asc())
+    page = request.args.get("page",1,type=int)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
     # cur.close()
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -451,7 +470,7 @@ def magazines():
         #         # product = curso.fetchall()
         product = Products.query.filter_by(id = product_id).all()
         x = content_based_filtering(product_id)
-        return render_template('order_product.html', x=x, products=product, form=form)
+        return render_template('order_product.html', x=x, products=product, form=form, domain=pesa.domain)
     return render_template('magazines.html', magazines=products, form=form)
 
 
@@ -466,7 +485,8 @@ def comics():
     # products = cur.fetchall()
     # # Close Connection
     # cur.close()
-    products = Products.query.filter_by(category = values).order_by(Products.id.asc()).all()
+    page = request.args.get("page",1,type=int)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -476,36 +496,16 @@ def comics():
         pid = request.args['order']
         phone = format_phone(mobile)
         session['pid']= pid
-
-        # Create Cursor
-        # curs = mysql.connection.cursor()
-        if 'pid' in session:
-            uid = session['pid']
-            # curs.execute("INSERT INTO orders(uid, pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s, %s)",
-            #              (uid, pid, name, mobile, order_place, quantity, now_time))
-            order = Orders(uid=uid,ofname=name,quantity=quantity,mobile=phone,email=email,odate=datetime.datetime.utcnow())
-            id = uid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-        else:
-            order = Orders(uid=pid, ofname=name,mobile=phone,email=email,quantity= quantity,odate=datetime.datetime.utcnow())
-            id = pid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-            # curs.execute("INSERT INTO orders(pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s)",
-            #              (pid, name, mobile, order_place, quantity, now_time))
-
-        # Commit cursor
+        order = Orders(uid=pid, ofname=name, quantity=quantity, mobile=phone, email=email,
+                       odate=datetime.datetime.utcnow())
         db.session.add(order)
         db.session.commit()
-        # mysql.connection.commit()
-        # Close Connection
-        # cur.close()
-
-        flash('Order successful', 'success')
-        return render_template('comics.html', comics=products, form=form)
+        prod = Products.query.filter_by(id=pid).first()
+        # pesa.transaction(prod.price, phone)
+        mdoh = pesa.transaction(prod.price,phone)
+        if mdoh:
+            flash('Order successful', 'success')
+            return redirect(url_for('link.html', product=prod))
     if 'view' in request.args:
         q = request.args['view']
         product_id = q
@@ -524,7 +524,7 @@ def comics():
         # product = curso.fetchall()
         product = Products.query.filter_by(id = product_id).all()
         x = content_based_filtering(product_id)
-        return render_template('order_product.html', x=x, products=product, form=form)
+        return render_template('order_product.html', x=x, products=product, form=form,domain=pesa.domain)
     return render_template('comics.html', comics=products, form=form)
 
 
@@ -539,7 +539,8 @@ def textbooks():
     # products = cur.fetchall()
     # # Close Connection
     # cur.close()
-    products = Products.query.filter_by(category = values).order_by(Products.id.asc())
+    page = request.args.get("page",1,type=int)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -599,7 +600,7 @@ def textbooks():
         # product = curso.fetchall()
         product = Products.query.filter_by(id = product_id).all()
         x = content_based_filtering(product_id)
-        return render_template('order_product.html', x=x, products=product, form=form)
+        return render_template('order_product.html', x=x, products=product, form=form,domain=pesa.domain)
     return render_template('textbooks.html', textbooks=products, form=form)
 
 
@@ -614,7 +615,8 @@ def newspapers():
     # products = cur.fetchall()
     # # Close Connection
     # cur.close()
-    products = Products.query.filter_by(category = values).order_by(Products.id.asc())
+    page = request.args.get("page",1,type=int)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -672,7 +674,7 @@ def newspapers():
         # product = curso.fetchall()
         product = Products.query.filter_by(id = product_id).all()
         x = content_based_filtering(product_id)
-        return render_template('order_product.html', x=x, products=product, form=form)
+        return render_template('order_product.html', x=x, products=product, form=form, domain=pesa.domain)
     return render_template('newspapers.html', newspapers=products, form=form)
 
 
@@ -794,10 +796,18 @@ def admin_add_product():
         link = request.form['link']
         file = request.files['picture']
         if name and price and description and author and country and edition and link and file:
+            allowed = {"."}.union(string.ascii_letters)
             pic = file.filename
-            photo = pic.replace("'", "")
-            picture = photo.replace(" ", "_")
+            photo =  "".join([letter for letter in pic if letter in allowed])
+            picture = photo.replace(" ", "")
+            print(file)
+            print(picture)
             if picture.lower().endswith(('.png', '.jpg', '.jpeg')):
+                bucket = s3.Bucket(BUCKET_NAME)
+                bucket.Object('static/image/product/'+category+'/'+picture).put(Body=file, ACL='public-read')
+                # fp = open(file, 'rb')
+                # https: // s3.us - east - 2.amazonaws.com / wanderift / static / image / product / comics / Beano % E2 % 80 % 932February2019.jpg
+                # s3.Bucket(BUCKET_NAME).upload_file(Filename = pic, Key=picture)
                 save_photo = photos.save(file, folder=category)
                 if save_photo:
                     # Create Cursor
@@ -902,7 +912,7 @@ def edit_product():
                 if name and price and description and author and category and countryOrigin and edition and file:
                     pic = file.filename
                     photo = pic.replace("'", "")
-                    picture = photo.replace(" ", "_")
+                    picture = photo.replace(" ", "")
                     if picture.lower().endswith(('.png', '.jpg', '.jpeg')):
                         save_photo = photos.save(file, folder=category)
                         if save_photo:
@@ -989,7 +999,6 @@ def edit_product():
 
 @app.route('/search', methods=['POST', 'GET'])
 def search():
-    form = OrderForm(request.form)
     if 'q' in request.args:
         q = request.args['q']
         # # Create cursor
@@ -1000,10 +1009,14 @@ def search():
         # products = cur.fetchall()
         # # Close Connection
         # cur.close()
-        products = Products.query.filter(Products.pName.like(q)).all()
-        print(products)
+        # products = Products.query.filter(or_(Products.pName.like(q),Products.pubdate.like(q))).all()
+        page = request.args.get("page", 1, type=int)
+        products = Products.query.whoosh_search(q).all()
+            # .paginate(page=page,per_page=20)
+        for product in products:
+            print(products)
         flash('Showing result for: ' + q, 'success')
-        return render_template('search.html', products=products, form=form)
+        return render_template('search.html', products=products)
     else:
         flash('Search again', 'danger')
         return render_template('search.html')
@@ -1100,7 +1113,7 @@ def developer():
 
 
 @app.route('/requests', methods=['GET', 'POST'])
-def requests():
+def myrequests():
     form = RequestForm(request.form)
     if request.method == 'POST' and form.validate():
         category = form.category.data
@@ -1116,25 +1129,34 @@ def requests():
     return render_template('modal_order.html', form=form)
 
 
+@app.route('/fileserve')
+def servefile():
+    id = session['pid']
+    print(id)
+    prod = Products.query.filter_by(id=id).first()
+    print(prod.link)
+    return render_template("link.html", product=prod) # file not opening
+
+
 @app.route('/callback', methods= ['POST'])
-def callbacks():
+def callback():
     if request.method == 'POST':
         resp = request.json
         print(resp)
         print(type(resp))
-        if resp['ResultCode'] == "0":
+        str(resp)
+        resp = json.dumps(resp)
+        print(type(resp))
+        data = json.loads(resp)
+
+        if data['Body']['stkCallback']['ResultCode'] == "0":
             if 'pid' in session:
                 prod = Products.query.filter_by(id=session['pid']).first()
-                return render_template('link.html', product=prod)
-                # driver.get(prod.link)
-                # try:
-                #     download = driver.find_element_by_class_name('downloadButton')
-                #     download.click()
-                # except:
-                #     print(prod.link)
-                #     return '<a href="/"> {} </a>'.format(prod.link)
-
-            print(request.json)
+                return redirect(url_for('servefile', product=prod))
+            else:
+                prod = Products.query.filter_by(id=request.args['order']).first()
+                return redirect(url_for('servefile', product=prod))
+        return redirect(url_for(str('index')))
 
 
 @app.route('/payment', methods=['POST'])
@@ -1144,7 +1166,7 @@ def payment():
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://"+pesa.domain+"/payment/execute",
+            "return_url": "http://"+pesa.domain+"/execute",
             "cancel_url": "http://"+pesa.domain+"/"},
         "transactions": [{
             "item_list": {
@@ -1166,20 +1188,20 @@ def payment():
 
     return jsonify({'paymentID' : payment.id})
 
+
+
 @app.route('/execute', methods=['POST'])
 def execute():
-    success = False
-
-    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
     id = session['pid']
     print(id)
     prod = Products.query.filter_by(id=id).first()
-    print(prod.link)
-
-    if payment.execute({'payer_id' : request.form['payerID']}):
-        print('Execute success!')
-
-        success = True
-        print(jsonify({'success': success}))
-
-        return render_template('link.html', product = prod)
+    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+    r = requests.get(prod.link)
+    # filename= prod.picture.replace(".", "")
+    # with open(filename+".pdf", 'wb') as f:
+    #     f.write(r.content)
+    print('Execute success!')
+    # return redirect('https://www.google.com/', code=302)
+    # return redirect(str(prod.link), code=302)
+    # return render_template("link.html", product=prod)
+    return render_template("link.html", product=prod)

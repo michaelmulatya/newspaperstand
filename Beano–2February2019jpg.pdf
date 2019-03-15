@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+	<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="author" content="NoFile">
+
+
+<title>Simple File Hosting - NoFile.io </title>
+<meta property="og:title" content="Simple File Hosting - NoFile.io " />
+
+<meta name="description" content="Upload files, videos and images up to 10 GB without any limitations or needing to register." />
+<meta property="og:description" content="Upload files, videos and images up to 10 GB without any limitations or needing to register." />
+
+<!-- META image -->
+<meta property="og:image" content="/img/icons/icon-512.png" />
+
+<!-- Favicon -->
+<link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+
+<!-- Icons -->
+<link rel="icon" type="image/png" href="/img/icons/icon-16.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="/img/icons/icon-32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/img/icons/icon-64.png" sizes="64x64" />
+<link rel="icon" type="image/png" href="/img/icons/icon-96.png" sizes="96x96" />
+<link rel="icon" type="image/png" href="/img/icons/icon-128.png" sizes="128x128" />
+
+<!-- Apple -->
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/img/icons/icon-152-solid.png" />
+
+<!-- Microsoft -->
+<meta name="application-name" content="NoFile" />
+<meta name="msapplication-tooltip" content="Share large files online with ease." />
+<meta name="msapplication-TileColor" content="#273b7a" />
+<meta name="msapplication-TileImage" content="/img/icons/icon-144.png" />
+<meta name="msapplication-square70x70logo" content="/img/icons/icon-70.png" />
+<meta name="msapplication-square150x150logo" content="/img/icons/icon-150.png" />
+<meta name="msapplication-square310x310logo" content="/img/icons/icon-310.png" />
+<meta name="msapplication-wide310x150logo" content="/img/icons/icon-310-150.png" />
+
+<!-- CSS -->
+<link href="/css/bootstrap.css" rel="stylesheet">
+
+<link href="/css/fonts.css?v=1.0.2.3" rel="stylesheet">
+<link href="/css/style.css?v=1.1.4.3" rel="stylesheet">
+ 
+
+<link rel='stylesheet' href='/css/fontawesome.min.css' />
+
+
+<link rel='stylesheet' href='/css/sweetalert.min.css?v=1.0.1.1' />
+
+<link rel='stylesheet' href='/css/animate.min.css' />
+
+<link rel='stylesheet' href='/css/jquery.growl.css' />
+
+<link rel='stylesheet' href='/css/hover.min.css' />
+
+
+<!-- Javascript -->
+<script src="/js/jquery.min.js"></script>
+
+<script src="/js/jquery.growl.js" type="text/javascript"></script>
+
+<script src="/js/clipboard.min.js" type="text/javascript"></script>
+
+
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+<script src="/js/sweetalert.min.js?v=1.0.1.1" type="text/javascript"></script>
+
+
+<script src="/js/wow.min.js" type="text/javascript"></script>
+
+<script src="/js/velocity.min.js" type="text/javascript"></script>
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+	<!-- Crypto -->
+	<script type="text/javascript" src="/js/aes.js"></script>
+	<script type="text/javascript" src="/js/core.js"></script>
+	<script type="text/javascript" src="/js/sha256.js"></script>
+	
+
+</head>
+
+<body>
+
+		<noscript>
+	
+		<div class="noJavascriptWarning">
+
+			Enable Javascript for a better experience.
+
+		</div>
+
+		<style>
+
+			.navbar{
+				
+				margin-top:40px;
+				
+			}
+			
+			.uploadContainer{
+				
+				background-color:transparent;
+				
+			}
+			
+			#uploadText{
+				
+				display:none;
+				
+			}
+			
+			.titleBox{
+				
+				margin-top: -30px;
+				
+			}
+
+			.uploadContainer{
+				
+				cursor:default;
+			
+			}
+				
+			
+		</style>
+
+	</noscript>
+	
+	<div class="device-xs visible-xs"></div>
+	<div class="device-sm visible-sm"></div>
+	<div class="device-md visible-md"></div>
+	<div class="device-lg visible-lg"></div>
+
+	<nav class="navbar navbar-default navbar-static-top">
+	
+		<div class="container">
+		
+			<div class="navbar-header">
+			
+				<button type="button" class="toggleButton navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				
+				  <span></span>
+				  <span></span>
+				  <span></span>
+				  <span></span>
+					
+				</button>
+
+				<a href="/" class="navbar-brand">
+
+					<img alt="NoFile Logo" class="display-inline" src="/img/icons/icon-128.png">
+					<span class="underlineEffect">NoFile.io</span>
+
+				</a>
+
+			</div>
+			
+			<div id="navbar" class="navbar-collapse collapse">
+			
+				<ul class="nav navbar-nav navbar-left">
+				
+					<li class="active"><a href="/"><i class="fa fa-upload fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">Upload</span></a></li>
+					<li><a href="/#about"><i class="fa fa-comments fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">About</span></a></li>
+					<li><a href="/#faq"><i class="fa fa-info-circle fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">FAQ</span></a></li>
+					<li><a href="/blog/"><i class="fa fa-pencil fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">Blog</span></a></li>
+					<li><a href="/security/"><i class="fa fa-lock fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">Security</span></a></li>
+					<li><a href="/contact/"><i class="fa fa-paper-plane fa-2x smallRotate" aria-hidden="true"></i> <span class="slideHoverText">Contact</span></a></li>
+
+					<!--
+					<li class="dropdown">
+					
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li role="separator" class="divider"></li>
+						<li class="dropdown-header">Nav header</li>
+						<li><a href="#">Separated link</a></li>
+						<li><a href="#">One more separated link</a></li>
+						</ul>
+						
+					</li>
+					-->
+					
+				</ul>
+				
+				<ul class="nav navbar-nav navbar-right">
+				
+										
+						<li>
+						
+							<a id="optionsButton" href="/settings/" class="largeMenuButton btn btn-info full-width">
+							
+								<span>
+								
+									<i class="fa fa-wrench smallRotate vertical-center" aria-hidden="true"></i> Settings
+								
+								</span>
+							
+							</a>
+						
+						</li>
+					
+										
+					
+										
+				</ul>
+			
+			</div><!--/.nav-collapse -->
+			
+		</div>
+		
+	</nav>
+	
+	<!-- Options Modal -->
+	<div id="optionsModal" class="modal fade" tabindex="-1" role="dialog">
+	
+		<div class="vertical-alignment-helper">
+		
+			<div class="modal-dialog vertical-align-center" role="document">
+			
+				<div class="modal-content">
+				
+					<div class="modal-header">
+					
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">General Settings</h4>
+						
+					</div>
+					
+					<div class="modal-body">
+					
+						<div class="row">
+					
+							<div class="col-sm-6 col-xs-12">
+							
+								<p>
+								
+									Encrypt files (BETA)
+									
+								</p>
+								
+								<label class="switch">
+								
+									<input id="encryptFiles" class="optionButton" type="checkbox">
+									<div class="slider"></div>
+									
+								</label>
+							
+							</div>					
+
+							<div class="col-sm-6 col-xs-12">
+							
+								<p>
+								
+									Disable previews on download pages
+									
+								</p>
+								
+								<label class="switch">
+								
+									<input id="disablePreview" class="optionButton" type="checkbox">
+									<div class="slider"></div>
+									
+								</label>
+							
+							</div>							
+							
+							<div class="col-sm-6 col-xs-12">
+							
+								<p>
+								
+									Enable site animations
+									
+								</p>
+								
+								<label class="switch">
+								
+									<input id="enableAnimations" class="optionButton" type="checkbox">
+									<div class="slider"></div>
+									
+								</label>
+							
+							</div>
+						
+						</div>						
+						
+					</div>
+				
+				</div><!-- /.modal-content -->
+				
+			</div><!-- /.modal-dialog -->
+		</div>
+	</div><!-- /.modal -->
+	<div id="supportWarning"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+
+	<div class="dropWindow">
+
+		<div class="dropWindowText">
+		
+			<i class="fa fa-cloud-upload" aria-hidden="true"></i> Drop your file here
+			
+			<div style="margin:0 auto !important;text-align:center;padding:0 !important;">
+			
+				<button class="btn-default hideDropMessage" style="text-align:center;font-size:12px;border-radius:3px;margin:0 auto;">Hide drag & drop window</button>
+			
+			</div>
+		
+		</div>
+
+	</div>
+
+    <!-- Page Content -->
+    <div class="mainBox">
+	
+		<div class="container">
+
+			<div class="row">
+			
+				<div class="col-md-12 col-xs-11 mainBoxChild">
+
+					<input id="file" type="file" class="hidden-strict" multiple>
+				
+					<!-- Select icon -->
+					<div id="selectFiles" class="uploadContainer verticalCenter">
+
+						<div class="uploadBoxText">
+						
+							<span id="uploadText"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Click here <u>or</u> drag & drop to start uploading</span>
+							
+							<noscript>
+							
+								<form style="background-color:rgba(0, 0, 0, 0.6);" enctype="multipart/form-data" method="post" action="https://s5.nofilecdn.io/upload/index.php" class="text-center nojsForm">
+
+									<input style="padding:10px;width:100%;font-size:14px;border-radius:0px;cursor:pointer;" class="btn-info" name="file" type="file" />
+									<div style="font-size:11px;color:white;text-align:left;margin-left:10px;" class="smallRotate"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Max: 10 MB (enable javascript to increase)</div>
+									
+									<input type="hidden" name="nojs" value="1" />
+									
+									<br />
+									
+									<button style="border-radius:0px;" class="form-control text-center btn-info" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload File</button>
+								
+								</form>
+							
+							</noscript>
+							
+						</div>
+						
+						<br />
+						
+					</div>
+					
+					<div id="uploadHistory" class="btn-info hidden-regular" style="text-align:center;width:65%;margin:0 auto;border-radius:0 0 50px 50px;padding:7px;text-transform:capitalize;">
+					
+						<i class="fa fa-bars" aria-hidden="true"></i> View your recent uploads
+					
+					</div>
+					
+					<!-- Upload section -->
+					<div id="selectedFilesDiv" class="underlineEffect"></div>
+				
+				</div>
+			
+			</div>
+			
+			<!-- Email modal -->
+			<div id="emailModal" class="modal fade" tabindex="-1" role="dialog">
+			
+				<div class="vertical-alignment-helper">
+				
+					<div class="modal-dialog vertical-align-center" role="document">
+					
+						<div class="modal-content">
+						
+							<div class="modal-header">
+							
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title">Share via email</h4>
+								
+							</div>
+							
+							<div class="modal-body">
+							
+								<p>
+								
+									Send an email to your
+									
+								</p>
+								
+							</div>
+						
+						</div><!-- /.modal-content -->
+						
+					</div><!-- /.modal-dialog -->
+				</div>
+			</div><!-- /.modal -->			
+			
+			<!-- Previous uploads modal -->
+			<div id="uploadHistoryModal" class="modal fade" tabindex="-1" role="dialog">
+			
+				<div class="vertical-alignment-helper">
+				
+					<div class="modal-dialog vertical-align-center" role="document">
+					
+						<div class="modal-content">
+						
+							<div class="modal-header">
+							
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title text-center"><i class="fa fa-history fa-2x vertical-center" aria-hidden="true"></i> Your Recent Uploads (<span id="allFilesTotal"></span>)</h4>
+								
+								<div class="text-center">
+								
+									<button class="btn-info text-center clearHistory">
+								
+										Clear All Upload History
+								
+									</button>
+								
+								</div>
+								
+							</div>
+							
+							<div class="modal-body">
+							
+								<div class="previousUploadBox underlineEffect">
+								</div>
+								
+								<div class="text-center">
+								
+									 <ul class="pagination">
+									 
+									 </ul>
+								
+								</div>
+							
+							</div>
+						
+						</div><!-- /.modal-content -->
+						
+					</div><!-- /.modal-dialog -->
+				</div>
+			</div><!-- /.modal -->
+
+			<!-- Left icons -->
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-globe" aria-hidden="true"></i>
+			
+			</div>
+			
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-folder-open" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-file" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-file-camera" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-file-text" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsLeft">
+			
+				<i class="fa fa-file-video" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<!-- Right icons -->
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-archive" aria-hidden="true"></i>
+			
+			</div>
+			
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-envelope" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-microphone" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-volume-up" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-file" aria-hidden="true"></i>
+			
+			</div>			
+			
+			<div class="floatingIcon iconsRight">
+			
+				<i class="fa fa-folder" aria-hidden="true"></i>
+			
+			</div>
+		
+		</div>
+
+		<div class="arrowInfoIcon" style="z-index:100;position:relative;">
+		
+			<a href="#about">
+			
+				<div class="chevronToInfo absoluteHorizontal">
+				
+					<i class="fa fa-chevron-down" aria-hidden="true"></i>
+
+				</div>
+			
+			</a>
+		
+		</div>
+		
+		<div class="indexBorderDiv"></div>
+		
+    </div>
+	
+	<section class="belowIndex container line-height-medium underlineEffect">
+	
+		<!-- Desktop screenshot
+		<div class="text-center wow zoomIn">
+		
+			<img class="monitor-info" src="img/desktops.png" alt="monitor">
+			
+		</div>
+		 -->
+	
+		<div id="about" class="row text-center information">
+		
+			<h1><i class="fa fa-retweet" aria-hidden="true"></i> About</h1>
+	
+			<div class="container" style="padding-bottom:30px;padding-top:50px;">
+	
+				<div class="col-md-4 infoBlock wow slideInLeft">
+				
+					<div class="iconCircle">
+					
+						<i class="fa fa-bolt fa-2x" aria-hidden="true"></i>
+					
+					</div>
+					
+					<h2>Speed</h2>
+					<h3>Time is precious</h3>
+					
+					<p class="text-center">
+					
+						Multiple threads and high bandwidth servers allow you to share your files as fast as possible.
+						
+					</p>
+				
+				</div>
+				
+				<div class="col-md-4 infoBlock wow slideInDown">
+				
+					<div class="iconCircle">
+					
+						<i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
+					
+					</div>
+					
+					<h2>Compatibility</h2>
+					<h3>Works on all devices</h3>
+					
+					<p class="text-center">
+					
+						NoFile.io works on nearly all browsers.<br />
+						No Javascript is required for regular downloads.
+						
+					</p>
+				
+				</div>
+				
+				
+				<div class="col-md-4 infoBlock wow slideInRight">
+				
+					<div class="iconCircle">
+				
+						<i class="fa fa-eye-slash fa-2x" aria-hidden="true"></i>
+					
+					</div>
+					
+					<h2>Encryption</h2>
+					<h3>Protect Your Files</h3>
+					
+					<p class="text-center">
+					
+						Protect sensitive files <a style="color:blue;" href="https://nofile.io/security/">with encryption</a>.<br />
+						Only users with the URL will be able to view it.
+						
+					</p>
+				
+				</div>
+			
+			</div>
+				
+			<div class="col-md-4 infoBlock wow slideInLeft">
+			
+				<div class="iconCircle">
+				
+					<i class="fa fa-lock fa-2x" aria-hidden="true"></i>
+				
+				</div>
+				
+				<h2>Security</h2>
+				<h3>Safe and Sound</h3>
+				
+				<p class="text-center">
+				
+					All transfers are done over an encrypted line.<br />
+					Password protect sensitive files to keep them safe.
+					
+				</p>
+			
+			</div>
+			
+			<div class="col-md-4 infoBlock wow slideInUp">
+			
+				<div class="iconCircle">
+				
+					<i class="fa fa-arrows-alt fa-2x" aria-hidden="true"></i>
+				
+				</div>
+
+				<h2>Preview</h2>
+				<h3>Take a look</h3>
+				
+				<p class="text-center">
+				
+					Preview most video, audio and image files before downloading them.
+					
+				</p>
+			
+			</div>
+			
+			<div class="col-md-4 infoBlock wow slideInRight">
+			
+				<div class="iconCircle">
+			
+					<i class="fa fa-fire fa-2x" aria-hidden="true"></i>
+				
+				</div>
+				
+				<h2>Simplicity</h2>
+				<h3>Keep it light</h3>
+				
+				<p class="text-center">
+				
+					Just head to the page and start uploading.<br />
+					No sign up related hassle is involved.
+					
+				</p>
+			
+			</div>
+			
+		</div>
+		
+		<hr />
+		
+		<div id="faq" class="faqSection row">
+		
+			<h1><i class="fa fa-comments-o" aria-hidden="true"></i> FAQ</h1>
+		
+			<div class="row">
+		
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>Which file types are accepted?</h2>
+					<h3>All of them</h3>
+				
+					<p>
+				
+						There's nothing more annoying than selecting a file and having it removed due to a disallowed file type, therefore all files are allowed.				
+				
+					</p>
+				
+				</div>			
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>What's the file size limit?</h2>
+					<h3>10 GB</h3>
+					
+					<p>
+				
+						Just like file types, it's annoying to have a file get rejected due to its file size and to avoid this from happening you can upload up to 10 GB per file.
+				
+					</p>
+				
+				</div>
+			
+			</div>
+			
+			<div class="row">
+			
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>How do I upload files?</h2>
+					<h3>Drop or Click</h3>
+				
+					<p>
+				
+						Scroll up and click on the large box to select the file that you want to upload, or just drag and drop your file anywhere on this page to start uploading.
+					
+					</p>
+				
+				</div>			
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>How long are my files kept?</h2>
+					<h3>As long as possible</h3>
+				
+					<p>
+					
+						You can set an expiry time by pressing the "Options"-button that's next to your uploaded file, otherwise your files will float in the clouds for as long as possible.
+					
+					</p>
+				
+				</div>
+			
+			</div>
+			
+			<div class="row">
+			
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>Why was my file deleted?</h2>
+					<h3>Expiry or Complaints</h3>
+				
+					<p>
+					
+						If your file expires or if a lot of complaints are sent in related to your file and it actually contains disallowed material, then there's a risk that it'll be removed.
+					
+					</p>
+				
+				</div>			
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>Can I recover a deleted file?</h2>
+					<h3>No, sorry</h3>
+				
+					<p>
+					
+						Once the file is removed it's completely gone, no logs or records are kept and the only way it can come back is if it's uploaded again.
+					
+					</p>
+				
+				</div>
+			
+			</div>
+			
+			<div class="row">
+			
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>How can this be a free service?</h2>
+					<h3>Magic</h3>
+				
+					<p>
+					
+						In the future a paid service will be introduced offering more awesome features, but don't worry it will not restrict the features of the free service.
+					
+					</p>
+				
+				</div>				
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>How do the download pages look?</h2>
+					<h3>Take a look</h3>
+				
+					<p>
+					
+						Here's <a target="_blank" href="https://nofile.io/f/BJ6MyXboYLj/NoFile_Demo.png">a regular download page</a>, <a target="_blank" href="https://nofile.io/f/Yl4NcFvsliN/NoFile_Demo.png">a download page with a password (password: 12345)</a> and <a target="_blank" href="https://nofile.io/f/UH58eLI68Cl/NoFile_Demo.png">a download page without a preview</a>.
+					
+					</p>
+				
+				</div>	
+
+			</div>			
+			
+			<div class="row">
+			
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>Are my files safe here?</h2>
+					<h3>In short; yes</h3>
+				
+					<p>
+					
+						All uploads are made securely over HTTPS and if you are sharing sensitive files then you have the ability to both <a href="/security/">encrypt your file and/or password protect it</a>.
+					
+					</p>
+				
+				</div>				
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>There's something I need to tell you!</h2>
+					<h3>We'd love to hear</h3>
+				
+					<p>
+					
+						Simply <a href="/contact/">contact us</a> and tell us what's on your mind - if you've found a bug or a serious security vulnerability then we'd like to reward you for letting us know.
+					
+					</p>
+				
+				</div>	
+
+			</div>			
+			
+			<div class="row">
+			
+				<div class="col-md-6 col-xs-12 text-center wow slideInLeft">
+				
+					<h2>Can anyone else see my upload history?</h2>
+					<h3>No, only you</h3>
+				
+					<p>
+					
+						Your upload history is saved locally in your browser's storage which means that only you (and those with access to your browser) can see your upload history.
+					
+					</p>
+				
+				</div>				
+				
+				<div class="col-md-6 col-xs-12 text-center wow slideInRight">
+				
+					<h2>Can I password protect my file?</h2>
+					<h3>Yes, it's possible</h3>
+				
+					<p>
+					
+						Once you've uploaded your file you can password protect it, forcing anyone who visits your file to enter its password before proceeding.
+					
+					</p>
+				
+				</div>	
+
+			</div>
+		
+		</div>
+		
+	</section>
+	
+			<div class="footerBorderDiv"></div>
+
+		<footer class="underlineEffect">
+		
+			<div class="footerIcon wow slideInDown">
+			
+				<img alt="NoFile footer icon" src="/img/icons/icon-128.png" />
+			
+			</div>
+
+			<div class="container smallRotate text-center footerMenu wow zoomIn">
+			
+				<a href="/">NoFile.io</a> | <a href="/blog/">Blog</a> | <a href="/security/">Security</a> | <a href="/#about">About</a> | <a href="/#faq">FAQ</a> | <a href="/contact/">Contact</a>
+			
+			</div>
+		
+		</footer>	
+	<div id="embedSound" class="hidden"></div>
+	
+	<script src="/js/common.js?v=1.0.3.4.7"></script>
+	<script src="/js/upload.js?v=1.2.1"></script>
+
+</body>
+</html>

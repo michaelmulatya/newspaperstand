@@ -12,11 +12,15 @@
                     <div class="card mb-4">
                         <a href="/{{product.category}}?view={{product.id}}">
                             <div class="card-img-top"
-                                 style="background: url('static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:200px;width:100% "></div>
+                                 style="background: url('https://s3.us-east-2.amazonaws.com/wanderift/static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:300px;width:100% "></div>
                         </a>
                         <div class="card-body">
-                            <h3><a class="card-title" id="" href="/{{product.category}}?view={{product.id}}">{{ product.pName}}</a></h3>
-                            <h4>$24.99</h4>
+                            <h6><a class="card-title" href="/{{product.category}}?view={{product.id}}">{{ product.pName}}({{ product.countryOrigin }})</a></h6>
+                            <h5>{{product.pubdate}}</h5>
+                        <div class="card-footer">
+                        <a href="/{{ product.category }}?order={{ product.id }}" class="btn btn-success">Buy & Download</a>
+                            <small class="text-muted">Kshs.{{ product.price }}</small>
+                        </div>
                             <span class="text-warning"></span>
                         </div>
                     </div>
@@ -28,6 +32,22 @@
         <!-- /.col-lg-9 -->
     </div>
     <!-- /.row -->
+{#<nav aria-label='Page Navigation example'>#}
+{#  <ul class="pagination justify-content-center">#}
+{#    {% for page_num in products.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)  %}#}
+{#      {% if products.page == page_num %}#}
+{#      <li class='page-item disabled'>#}
+{#        <a class="page-link" href="{{url_for('products',page=page_num)}}">{{ page_num}}</a>#}
+{#      </li>#}
+{#      {% else %}#}
+{#      <li class='page-item'>#}
+{#        <a class="page-link" href="{{url_for('products',page=page_num)}}">{{ page_num}}</a>#}
+{#      </li>#}
+{#      {% endif %}#}
+{#    {% endfor %}#}
+{#  </ul>#}
+{##}
+{#</nav>#}
 </div>
 <!-- /.container -->
 {% endblock %}

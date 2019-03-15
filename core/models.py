@@ -1,4 +1,4 @@
-from core import db
+from core import db, wa, app
 from datetime import datetime
 
 
@@ -46,6 +46,8 @@ class Orders(db.Model):
 
 
 class Products(db.Model):
+    __searchable__ = ['pName','pubdate','description']
+
     id = db.Column(db.Integer, primary_key=True)
     pName = db.Column(db.String(100))
     pubdate = db.Column(db.String(10))
@@ -167,3 +169,5 @@ class Request(db.Model):
         self.pubmonth = pubmonth
         self.description = description
         self.status = status
+
+wa.whoosh_index(app, Products)
