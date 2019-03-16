@@ -72,17 +72,18 @@
                                                 payerID:   data.payerID
 
                                             }).then(function(res) {
+                                                window.location.assign(REDIRECT_URL)
 
                                                 console.log(res.success);
                                                 // The payment is complete!
                                                 // You can now show a confirmation message to the customer
-                                                {#window.location.href({{ product.link }})#}
+
                                             });
 
                                         }
 
-
                                     }, '#paypal-button');
+
                                 </script>
                             </form>
                         </div>
