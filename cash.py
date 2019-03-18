@@ -70,14 +70,13 @@ class Mpesa():
           "PhoneNumber": ""+phonenumber,
           "CallBackURL": "https://"+self.domain+"/callback",
           "AccountReference": "Ebook Payment",
-          "TransactionDesc": "housing Agent Fee "
+          "TransactionDesc": "Ebook Payment "
         }
 
         response = requests.post(api_url, json = request, headers=headers)
 
         print (response.text)
 
-        print (response.text)
 
 
 

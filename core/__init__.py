@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_cdn import CDN
 import paypalrestsdk
-
+import flask_whooshalchemy
 
 
 

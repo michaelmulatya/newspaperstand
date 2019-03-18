@@ -13,7 +13,9 @@ import paypalrestsdk
 import requests
 import json
 import boto3
+import time
 from botocore.client import Config
+import flask_whooshalchemy
 
 ACCESS_KEY_ID = 'AKIAIPEPT7GFYD5VOZRQ'
 ACCESS_SECRET_KEY = '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'
@@ -189,7 +191,7 @@ def index():
     current_time = datetime.datetime.utcnow()
 
     week_ago = current_time - datetime.timedelta(weeks=2)
-    newest = Products.query.filter(Products.date < week_ago).order_by(Products.id.desc()).limit(8).all()
+    newest = Products.query.filter(Products.date > week_ago).order_by(Products.id.desc()).limit(8).all()
 
     if 'order' in request.args:
         product_id = request.args['order']
@@ -372,6 +374,39 @@ def chats():
     return redirect(url_for('login'))
 
 
+pes = False
+@app.route('/callback', methods= ['POST'])
+def callback():
+    if request.method == 'POST':
+        resp = request.json
+        print(resp)
+        str(resp)
+        resp = json.dumps(resp)
+
+        data = json.loads(resp)
+        pesaid = data['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value']
+        phone = data['Body']['stkCallback']['CallbackMetadata']['Item'][4]['Value']
+
+        print(pesaid)
+        print(phone)
+        global pes
+
+
+        if data['Body']['stkCallback']['ResultCode'] == 0:
+            pes = True
+            return redirect(url_for('servefile'))
+            # if 'pid' in session:
+            #     prod = Products.query.filter_by(id=session['pid']).first()
+            #     print("i")
+            #     return redirect(url_for('servefile'))
+            # else:
+            #     # id = request.args['order']
+            #     # prod = Products.query.filter_by(id=id).first()
+            #     # # prod = Products.query.filter_by(id=4).first()
+            #     #
+            #     # print("q")
+            #     return redirect(url_for('servefile'))
+        # return redirect(url_for('index'))
 
 
 
@@ -386,7 +421,7 @@ def magazines():
     # products = cur.fetchall()
     # Close Connection
     page = request.args.get("page",1,type=int)
-    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=18)
     # cur.close()
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -394,39 +429,22 @@ def magazines():
         email = form.email.data
         quantity = 1
         pid = request.args['order']
-        session['pid']= pid
-        # Create Cursor
-        # curs = mysql.connection.cursor()
         phone = format_phone(mobile)
-
-        if 'pid' in session:
-            uid = session['pid']
-            # curs.execute("INSERT INTO orders(uid, pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s, %s)",
-            #              (uid, pid, name, mobile, order_place, quantity, now_time))
-            order = Orders(uid=uid,ofname=name,quantity=quantity,mobile=mobile,email=email,odate=datetime.datetime.utcnow())
-            id = uid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-        else:
-            order = Orders(uid=pid,ofname=name,mobile=mobile,email=email,quantity=quantity,odate=datetime.datetime.utcnow())
-            id = pid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-        #     curs.execute("INSERT INTO orders(pid, ofname, mobile, oplace, quantity, ddate) "
-        #                  "VALUES(%s, %s, %s, %s, %s, %s)",
-        #                  (pid, name, mobile, order_place, quantity, now_time))
-        # # Commit cursor
-
+        session['pid']= pid
+        order = Orders(uid=pid, ofname=name, quantity=quantity, mobile=phone, email=email,
+                       odate=datetime.datetime.utcnow())
         db.session.add(order)
         db.session.commit()
-        # mysql.connection.commit()
+        prod = Products.query.filter_by(id=pid).first()
+        # pesa.transaction(prod.price, phone)
+        pesa.transaction(prod.price,phone)
+        time.sleep(30)
+        print(pes)
+        if pes is True:
+            return render_template('link.html', product=prod)
+        else:
+            return redirect(url_for('magazines'))
 
-        # Close Connection
-        # cur.close()
-
-        flash('Order successful', 'success')
-        return render_template('magazines.html', magazines=products, form=form)
     if 'view' in request.args:
         product_id = (request.args['view'])
         # curso = mysql.connection.cursor()
@@ -484,7 +502,7 @@ def comics():
     # # Close Connection
     # cur.close()
     page = request.args.get("page",1,type=int)
-    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=18)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -500,10 +518,13 @@ def comics():
         db.session.commit()
         prod = Products.query.filter_by(id=pid).first()
         # pesa.transaction(prod.price, phone)
-        mdoh = pesa.transaction(prod.price,phone)
-        if mdoh:
-            flash('Order successful', 'success')
-            return redirect(url_for('link.html', product=prod))
+        pesa.transaction(prod.price,phone)
+        time.sleep(30)
+        print(pes)
+        if pes is True:
+            return render_template('link.html', product=prod)
+        else:
+            return redirect(url_for('comics'))
     if 'view' in request.args:
         q = request.args['view']
         product_id = q
@@ -538,7 +559,7 @@ def textbooks():
     # # Close Connection
     # cur.close()
     page = request.args.get("page",1,type=int)
-    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=18)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -548,38 +569,19 @@ def textbooks():
         pid = request.args['order']
         phone = format_phone(mobile)
         session['pid']= pid
-
-        # Create Cursor
-        # curs = mysql.connection.cursor()
-        if 'pid' in session:
-            uid = session['pid']
-            # curs.execute("INSERT INTO orders(uid, pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s, %s)",
-            #              (uid, pid, name, mobile, order_place, quantity, now_time))
-            order = Orders(uid=uid,ofname=name,quantity=quantity,mobile=phone,email=email,odate=datetime.datetime.utcnow())
-            id = uid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-        else:
-            order = Orders(uid=pid, ofname=name,mobile=phone, email=email,quantity= quantity,odate=datetime.datetime.utcnow())
-            id = pid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-
-            # curs.execute("INSERT INTO orders(pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s)",
-            #              (pid, name, mobile, order_place, quantity, now_time))
+        order = Orders(uid=pid, ofname=name, quantity=quantity, mobile=phone, email=email,
+                       odate=datetime.datetime.utcnow())
         db.session.add(order)
         db.session.commit()
-
-        # # Commit cursor
-        # mysql.connection.commit()
-        #
-        # # Close Connection
-        # cur.close()
-
-        flash('Order successful', 'success')
-        return render_template('textbooks.html', textbooks=products, form=form)
+        prod = Products.query.filter_by(id=pid).first()
+        # pesa.transaction(prod.price, phone)
+        pesa.transaction(prod.price,phone)
+        time.sleep(30)
+        print(pes)
+        if pes is True:
+            return render_template('link.html', product=prod)
+        else:
+            return redirect(url_for('magazines'))
     if 'view' in request.args:
         q = request.args['view']
         product_id = q
@@ -614,7 +616,7 @@ def newspapers():
     # # Close Connection
     # cur.close()
     page = request.args.get("page",1,type=int)
-    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=18)
 
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -625,35 +627,19 @@ def newspapers():
         phone = format_phone(mobile)
         session['pid']= pid
 
-        # Create Cursor
-        # curs = mysql.connection.cursor()
-        if 'pid' in session:
-            uid = session['pid']
-            # curs.execute("INSERT INTO orders(uid, pid, ofname, mobile, oplace, quantity, ddate) "
-            #              "VALUES(%s, %s, %s, %s, %s, %s, %s)",
-            #              (uid, pid, name, mobile, order_place, quantity, now_time))
-            order = Orders(uid=uid,ofname=name,quantity=quantity,mobile=phone,email=email,odate=datetime.datetime.utcnow())
-            id = uid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-        else:
-            order = Orders(uid=pid, ofname=name,mobile=phone,email=email,quantity= quantity,odate=datetime.datetime.utcnow())
-            id = pid
-            prod = Products.query.filter_by(id=id).first()
-            pesa.transaction(prod.price, phone)
-
-        #     curs.execute("INSERT INTO orders(pid, ofname, mobile, oplace, quantity, ddate) "
-        #                  "VALUES(%s, %s, %s, %s, %s, %s)",
-        #                  (pid, name, mobile, order_place, quantity, now_time))
-        # # Commit cursor
-        # mysql.connection.commit()
-        # # Close Connection
-        # cur.close()
+        order = Orders(uid=pid, ofname=name, quantity=quantity, mobile=phone, email=email,
+                       odate=datetime.datetime.utcnow())
         db.session.add(order)
         db.session.commit()
-
-        flash('Order successful', 'success')
-        return render_template('newspapers.html', newspapers=products, form=form)
+        prod = Products.query.filter_by(id=pid).first()
+        # pesa.transaction(prod.price, phone)
+        pesa.transaction(prod.price,phone)
+        time.sleep(30)
+        print(pes)
+        if pes is True:
+            return render_template('link.html', product=prod)
+        else:
+            return redirect(url_for('magazines'))
     if 'view' in request.args:
         q = request.args['view']
         product_id = q
@@ -1009,7 +995,8 @@ def search():
         # cur.close()
         # products = Products.query.filter(or_(Products.pName.like(q),Products.pubdate.like(q))).all()
         page = request.args.get("page", 1, type=int)
-        products = Products.query.whoosh_search(q).all()
+        products = Products.query.whoosh_search(q, or_=True).all()
+
             # .paginate(page=page,per_page=20)
         for product in products:
             print(products)
@@ -1136,25 +1123,7 @@ def servefile():
     return render_template("link.html", product=prod) # file not opening
 
 
-@app.route('/callback', methods= ['POST'])
-def callback():
-    if request.method == 'POST':
-        resp = request.json
-        print(resp)
-        print(type(resp))
-        str(resp)
-        resp = json.dumps(resp)
-        print(type(resp))
-        data = json.loads(resp)
 
-        if data['Body']['stkCallback']['ResultCode'] == "0":
-            if 'pid' in session:
-                prod = Products.query.filter_by(id=session['pid']).first()
-                return redirect(url_for('servefile', product=prod))
-            else:
-                prod = Products.query.filter_by(id=request.args['order']).first()
-                return redirect(url_for('servefile', product=prod))
-        return redirect(url_for(str('index')))
 
 
 @app.route('/payment', methods=['POST'])

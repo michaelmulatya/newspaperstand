@@ -35,6 +35,7 @@ class Orders(db.Model):
     quantity = db.Column(db.Integer)
     mobile = db.Column(db.String(15))
     email = db.Column(db.String(100))
+    # mpesacode = db.Column(db.String(10))
     odate = db.Column(db.String, nullable=False, default=datetime.now)
 
     def __init__(self, uid, ofname, quantity, mobile, email, odate):
