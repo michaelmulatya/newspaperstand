@@ -42,9 +42,9 @@ s3 = boto3.resource(
 # command_result = driver.execute("send_command", params)
 
 paypalrestsdk.configure({
-      "mode": "sandbox", # sandbox or live
-      "client_id": "AerFGosD8Ndp419g717X_eRKaVU8834Jj9HIWAhnpQP7H3uwsVK3XWK7hQngYQFg401nd5KdK0V2INwY",
-      "client_secret": "EAEfZ67HRloa4jl_pWKX59_-KXUeXYyiw4gcEVN_DmGzUCjovV1D6pvLn809owy3CQsSIqBCbpCDHvvA" })
+      "mode": "live", # sandbox or live
+      "client_id": "ARciBg7HG9sZdvAoDdBkYuavfzbbBY5-4l_Ev3MTZapgupjpVkz3uCyTz8CtiVAChdNXUtJLP8t8pHKk",
+      "client_secret": "EJwu2L-ON126Y_KPpOQBNvusFQNMoY6fC3fWB-xdoGu8UKZ_eLL5aP5vRnMWdKU5wJ_9p2tKtpPDaklT" })
 
 
 
@@ -1138,7 +1138,7 @@ def payment():
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "testitem",
+                    "name": "magazine",
                     "sku": "12345",
                     "price": "1.00",
                     "currency": "USD",
@@ -1146,7 +1146,7 @@ def payment():
             "amount": {
                 "total": "1.00",
                 "currency": "USD"},
-            "description": "This is the payment transaction description."}]})
+            "description": "Payment for magazine/Ebook."}]})
 
     if payment.create():
         print('Payment success!')
