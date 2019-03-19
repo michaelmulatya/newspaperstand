@@ -55,8 +55,12 @@
                                     var REDIRECT_URL = 'https://{{ domain }}/fileserve';
 
                                     paypal.Button.render({
+                                        style: {
+                                                 size: 'responsive',
+                                                shape:'rect'
+                                                 },
 
-                                        env: 'live', // Or 'sandbox'
+                                        env: 'sandbox', // Or 'sandbox'
 
                                         commit: true, // Show a 'Pay Now' button
 
