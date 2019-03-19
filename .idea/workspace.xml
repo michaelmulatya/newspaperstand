@@ -71,7 +71,7 @@
         <counts>
           <entry key="Procfile" value="33" />
           <entry key="css" value="23" />
-          <entry key="html" value="3662" />
+          <entry key="html" value="3694" />
           <entry key="js" value="17" />
           <entry key="py" value="16493" />
           <entry key="txt" value="14" />
@@ -80,7 +80,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="23" />
-          <entry key="HTML" value="3662" />
+          <entry key="HTML" value="3694" />
           <entry key="JavaScript" value="17" />
           <entry key="PLAIN_TEXT" value="47" />
           <entry key="Python" value="16493" />
@@ -168,8 +168,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/templates/order_product.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+            <state relative-caret-position="244">
+              <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
             </state>
           </provider>
         </entry>
@@ -558,10 +558,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <frame x="676" y="0" width="697" height="735" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49516907" visible="true" weight="0.115733735" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49516907" weight="0.24018839" />
       <window_info id="Structure" order="1" sideWeight="0.5048309" side_tool="true" weight="0.24432677" />
       <window_info id="Favorites" order="2" sideWeight="0.50213677" side_tool="true" weight="0.0098335855" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -575,8 +574,8 @@
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32872504" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32569557" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.1767594" />
-      <window_info anchor="bottom" id="Run" order="12" visible="true" weight="0.32242227" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.17607974" />
+      <window_info anchor="bottom" id="Run" order="12" weight="0.32724252" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -958,8 +957,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/templates/order_product.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+        <state relative-caret-position="244">
+          <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
         </state>
       </provider>
     </entry>
