@@ -1,21 +1,51 @@
-<nav class="navbar navbar-expand-lg navbar-dark  fixed-top "style="background-color: #1C2826;">
-    <a class="navbar-brand" href="/">Ebooks Online</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-        <div class="input-group p-0 justify-content-center">
-            <form action="/search" method="get" class="w-100 m-0" style="padding-right: 20%;">
-                <div class="input-group-append rounded-left">
-                    <input type="text" class="form-control rounded-left" autocomplete="off" style="float: left; border-radius: 0;" name="q" placeholder="Search Ebooks....">
-                    <button class="btn btn-success btn-sm rounded-right" style="border-radius: 0;" type="submit">Search</button>
-                </div>
-            </form>
-        </div>
-        <ul class="navbar-nav ml-auto">
+{#<nav class="navbar navbar-expand-lg navbar-dark  fixed-top "style="background-color: #1C2826;">#}
+{#    <a class="navbar-brand" href="/">Ebooks Online</a>#}
+{#    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"#}
+{#            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">#}
+{#        <span class="navbar-toggler-icon"></span>#}
+{#    </button>#}
+{#    <div class="collapse navbar-collapse" id="navbarResponsive">#}
+{#        <div class="input-group p-0 justify-content-center">#}
+{#            <form action="/search" method="get" class="w-100 m-0" style="padding-right: 20%;">#}
+{#                <div class="input-group-append rounded-left">#}
+{#                    <input type="text" class="form-control rounded-left" autocomplete="off" style="float: left; border-radius: 0;" name="q" placeholder="Search Ebooks....">#}
+{#                    <button class="btn btn-success btn-sm rounded-right" style="border-radius: 0;" type="submit">Search</button>#}
+{#                </div>#}
+{#            </form>#}
+{#        </div>#}
+{#        <ul class="navbar-nav ml-auto">#}
+{#            {% if session.logged_in %}#}
+{#            <li class="nav-item"><a href="/" class="nav-link"><span class=""></span> Home</a></li>#}
+{#            <li class="nav-item"><a href="/profile?user={{session.uid}}" class="nav-link">{{ session.s_name }}</a>#}
+{#            </li>#}
+{#            <li class="nav-item"><a href="/out" class="nav-link"><span class=""></span> Logout</a></li>#}
+{#            <li class="nav-item"><a href="/requests" class="nav-link btn btn-outline-warning "><span class=""></span>Custom Request </a></li>#}
+{#            {% else %}#}
+{#            <li class="nav-item"><a href="/" class="nav-link"><span class=""></span> Home</a></li>#}
+{#            <li class="nav-item"><a href="/register" class="nav-link"><span class=""></span> Register</a></li>#}
+{#            <li class="nav-item"><a href="/login" class="nav-link "><span class=""></span> Login</a></li>#}
+{#            <li class="nav-item"><a href="/requests" class="nav-link btn btn-outline-warning "><span class=""></span>Custom Request </a></li>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    </div>#}
+{#</nav>#}
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    <a class="navbar-brand" href="/">Newspaper Stand</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav navbar-right">
             {% if session.logged_in %}
-            <li class="nav-item"><a href="/" class="nav-link"><span class=""></span> Home</a></li>
+            <li><a href="/" > Home</a></li>
             <li class="nav-item"><a href="/profile?user={{session.uid}}" class="nav-link">{{ session.s_name }}</a>
             </li>
             <li class="nav-item"><a href="/out" class="nav-link"><span class=""></span> Logout</a></li>
@@ -27,5 +57,22 @@
             <li class="nav-item"><a href="/requests" class="nav-link btn btn-outline-warning "><span class=""></span>Custom Request </a></li>
             {% endif %}
         </ul>
+{#      <ul class="nav navbar-nav navbar-right">#}
+{#        <li><a href="#myPage">HOME</a></li>#}
+{#        <li><a href="#band">BAND</a></li>#}
+{#        <li><a href="#tour">TOUR</a></li>#}
+{#        <li><a href="#contact">CONTACT</a></li>#}
+{#        <li class="dropdown">#}
+{#          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MORE#}
+{#          <span class="caret"></span></a>#}
+{#          <ul class="dropdown-menu">#}
+{#            <li><a href="#">Merchandise</a></li>#}
+{#            <li><a href="#">Extras</a></li>#}
+{#            <li><a href="#">Media</a></li>#}
+{#          </ul>#}
+{#        </li>#}
+{#        <li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>#}
+{#      </ul>#}
     </div>
+  </div>
 </nav>

@@ -3,9 +3,9 @@ import os
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_cdn import CDN
-import paypalrestsdk
-import flask_whooshalchemy
+# from flask_cdn import CDN
+# import paypalrestsdk
+# import flask_whooshalchemy
 
 
 
@@ -15,8 +15,8 @@ app.config['UPLOADED_PHOTOS_DEST'] = 'core/static/image/product'
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 
-app.config['CDN_DOMAIN'] = 's3.us-east-2.amazonaws.com'
-CDN(app)
+# app.config['CDN_DOMAIN'] = 's3.us-east-2.amazonaws.com'
+# CDN(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 # STATIC_ROOT = os.path.join(basedir, 'staticfiles')

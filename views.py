@@ -15,11 +15,13 @@ import json
 import boto3
 import time
 from botocore.client import Config
+import requests
+from PyPDF2 import PdfFileWriter, PdfFileReader
 import flask_whooshalchemy
 
-ACCESS_KEY_ID = 'AKIAIPEPT7GFYD5VOZRQ'
-ACCESS_SECRET_KEY = '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'
-BUCKET_NAME = 'wanderift'
+ACCESS_KEY_ID = 'ACCESSKEY'
+ACCESS_SECRET_KEY = 'SECRETKEY'
+BUCKET_NAME = 'BUCKETNAME'
 
 s3 = boto3.resource(
     's3',
@@ -43,15 +45,15 @@ s3 = boto3.resource(
 
 paypalrestsdk.configure({
       "mode": "live", # sandbox or live
-      "client_id": "ARciBg7HG9sZdvAoDdBkYuavfzbbBY5-4l_Ev3MTZapgupjpVkz3uCyTz8CtiVAChdNXUtJLP8t8pHKk",
-      "client_secret": "EJwu2L-ON126Y_KPpOQBNvusFQNMoY6fC3fWB-xdoGu8UKZ_eLL5aP5vRnMWdKU5wJ_9p2tKtpPDaklT" })
+      "client_id": "CLIENTID",
+      "client_secret": "CLIENT SECRET" })
 
 
 
 core = Blueprint('core',__name__)
 
 #request.base_url
-pesa = Mpesa('newspaperstand.herokuapp.com',"174379")
+pesa = Mpesa('a2ef41ae.ngrok.io',"174379")
 
 def is_logged_in(f):
     @wraps(f)
@@ -173,19 +175,19 @@ def index():
     values = 'magazines'
     # cur.execute("SELECT * FROM products WHERE category=%s ORDER BY RAND() LIMIT 4", (values,))
     # magazines = cur.fetchall()
-    magazines = Products.query.filter_by(category = values).order_by(func.random()).limit(4).all()
+    magazines = Products.query.filter_by(category=values).order_by(func.random()).limit(4).all()
     values = 'comics'
     # cur.execute("SELECT * FROM products WHERE category=%s ORDER BY RAND() LIMIT 4", (values,))
     # comics = cur.fetchall()
-    comics = Products.query.filter_by(category = values).order_by(func.random()).limit(4).all()
+    comics = Products.query.filter_by(category=values).order_by(func.random()).limit(4).all()
     values = 'textbooks'
     # cur.execute("SELECT * FROM products WHERE category=%s ORDER BY RAND() LIMIT 4", (values,))
     # textbooks = cur.fetchall()
-    textbooks = Products.query.filter_by(category = values).order_by(func.random()).limit(4).all()
+    textbooks = Products.query.filter_by(category=values).order_by(func.random()).limit(4).all()
     values = 'newspapers'
     # cur.execute("SELECT * FROM products WHERE category=%s ORDER BY RAND() LIMIT 4", (values,))
     # newspapers = cur.fetchall()
-    newspapers = Products.query.filter_by(category = values).order_by(func.random()).limit(4).all()
+    newspapers = Products.query.filter_by(category=values).order_by(func.random()).limit(4).all()
     # Close Connection
     # cur.close()
     current_time = datetime.datetime.utcnow()
@@ -421,7 +423,7 @@ def magazines():
     # products = cur.fetchall()
     # Close Connection
     page = request.args.get("page",1,type=int)
-    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=18)
+    products = Products.query.filter_by(category = values).order_by(Products.date.desc()).paginate(page=page,per_page=20)
     # cur.close()
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -1172,3 +1174,23 @@ def execute():
     # return redirect(str(prod.link), code=302)
     # return render_template("link.html", product=prod)
     return render_template("link.html", product=prod)
+
+# @app.route('/preview', methods= ['GET'])
+# def getpreview():
+#     id = session['pid']
+#     prod = Products.query.filter_by(id=id).first()
+#     url = prod.link
+#     r = requests.get(url, stream=True)
+#     name = prod.pName
+#
+#     with open(name+'.pdf', 'wb') as fd:
+#         for chunk in r.iter_content(2000):
+#             fd.write(chunk)
+#     inputpdf = PdfFileReader(open(name+".pdf", "rb"))
+#     output = PdfFileWriter()
+#     outputStream = open(name+".pdf", "wb")
+#     for i in range(4):
+#         n= int(i)
+#         output.addPage(inputpdf.getPage(n))
+#         output.write(outputStream)
+#     return render_template('preview.html',filename=outputStream)

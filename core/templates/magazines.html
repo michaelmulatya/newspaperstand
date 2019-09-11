@@ -1,30 +1,31 @@
 {% extends 'layout.html' %}
+
 {% block body %}
 <!-- Page Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-3" style="background-color: #1C2826;">
-            <h1 class="my-4 text-white">Magazines</h1>
-            <div class="list-group " style="background-color: #2C1A1D;">
-                <a href="/magazines" class="list-group-item active">Magazines</a>
-                <a href="/comics" class="list-group-item">Comics</a>
-                <a href="/textbooks" class="list-group-item">TextBooks</a>
-                <a href="/newspapers" class="list-group-item">Newspapers</a>
-            </div>
-        </div>
+{#<div class="container">#}
+{#    <div class="row">#}
+{#        <div class="col-lg-3" style="background-color: #1C2826;">#}
+{#            <h1 class="my-4 text-white">Magazines</h1>#}
+{#            <div class="list-group " style="background-color: #2C1A1D;">#}
+{#                <a href="/magazines" class="list-group-item active">Magazines</a>#}
+{#                <a href="/comics" class="list-group-item">Comics</a>#}
+{#                <a href="/textbooks" class="list-group-item">TextBooks</a>#}
+{#                <a href="/newspapers" class="list-group-item">Newspapers</a>#}
+{#            </div>#}
+{#        </div>#}
         <!-- /.col-lg-3 -->
-        <div class="col-lg-9">
+{#        <div class="col-lg-9">#}
             {% include 'includes/_flashmsg.html' %}
             <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
                 <ol class="carousel-indicators">
                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1" ></li>
                     <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                 </ol>
-                <div class="carousel-inner" role="listbox" style="max-height: 300px">
+                <div class="carousel-inner" role="listbox" style="max-height: 450px">
                     <div class="carousel-item active">
                         <img class="d-block img-fluid" src="https://s3.us-east-2.amazonaws.com/wanderift/static/image/other/magazine.jpeg" alt="Magazines"
-                             width="1100" height="300">
+                             width="1200" height="700">
                         <div class="carousel-caption">
                             <h3>Magazines</h3>
                             <p>Your favorite magazines at the click of button</p>
@@ -32,15 +33,15 @@
                     </div>
                     <div class="carousel-item">
                         <img class="d-block img-fluid" src="https://s3.us-east-2.amazonaws.com/wanderift/static/image/other/magazine3.jpeg" alt="Magazines"
-                             height="300">
+                            width="1200" height="700">
                         <div class="carousel-caption">
                             <h3>Magazines</h3>
-                            <p>WYour favorite magazines at the click of button</p>
+                            <p>Your favorite magazines at the click of button</p>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img class="d-block img-fluid" src="https://s3.us-east-2.amazonaws.com/wanderift/static/image/other/magazine4.jpeg" alt="Magazines"
-                             width="1100" height="300">
+                             width="1200" height="700">
                         <div class="carousel-caption">
                             <h3>Magazines</h3>
                             <p>Your favorite magazines at the click of button</p>
@@ -57,30 +58,69 @@
                 </a>
             </div>
 
-            <div class="card-deck">
+<div class="container-fluid bg-2 text-center">
+  <h3 class="margin">What Am I?</h3>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+  </div>
+    <br><br><hr>
+
+<div class="container" >
+
+               <div class="row">
                 {% for product in magazines.items %}
-                <div class=" col-lg-4  mb-4">
-                    <div class="card text-right w-100">
-                        <a href="/magazines?view={{product.id}}">
-                            <div class="card-img-top"
-                                 style="background: url('https://s3.us-east-2.amazonaws.com/wanderift/static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:300px;width:100% "></div>
+{#                {% if product.category == 'magazines' %}#}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                <br>
+                    <div class="card mb-4 ">
+                        <a href="/{{product.category}}?view={{product.id}}">
+                            <div class="card-img-top id_{{product.id}}"
+                                 style="background: url('https://s3.us-east-2.amazonaws.com/wanderift/static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:350px;width:100%"></div>
                         </a>
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="/magazines?view={{product.id}}">{{ product.pName}}</a>
-                            </h5>
-                            <h4>Kshs.{{product.price}}</h4>
-                        </div>
+                            <h6><a class="card-title" href="javascript:void();">{{ product.pName}}({{ product.countryOrigin }})</a></h6>
+                            <h5>{{product.pubdate}} 2019</h5>
                         <div class="card-footer">
-                            <small class="text-muted"></small>
+                        <a href="/{{ product.category }}?order={{ product.id }}" class="btn btn-success">Buy & Download</a>
+                            <small class="text-muted">price {{ product.price }}$</small>
+                        </div>
+                            <span class="text-warning"></span>
                         </div>
                     </div>
+                    <!-- /.card -->
                 </div>
+{#                {% endif %}#}
                 {% endfor %}
             </div>
+    <br>
+</div>
+
+{#            <div class="card">#}
+{#                {% for product in magazines.items %}#}
+{#                <div class=" col-lg-4  col-md-4 col-sm-6">#}
+{#                    <div class="card mb-4">#}
+{#                        <a href="/{{product.category}}?order={{product.id}}">#}
+{#                            <div class="card-img-top"#}
+{#                                 style="background: url('https://s3.us-east-2.amazonaws.com/wanderift/static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:100%;width:100% "></div>#}
+{#                        </a>#}
+{#                        <div class="card-body">#}
+{#                            <h6><a class="card-title" href="/{{product.category}}?view={{product.id}}">{{ product.pName}}({{ product.countryOrigin }})</a></h6>#}
+{#                            <h5>{{product.pubdate}}</h5>#}
+{#                        <div class="card-footer">#}
+{#                        <a href="/{{ product.category }}?order={{ product.id }}" class="btn btn-success">Buy & Download</a>#}
+{#                            <small class="text-muted">price {{ product.price }}$</small>#}
+{#                        </div>#}
+{#                            <span class="text-warning"></span>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+
+
             <!-- /.row -->
-        <nav aria-label='Page Navigation example'>
-  <ul class="pagination justify-content-center">
+{#<nav aria-label='Page Navigation example'>#}
+<div class="text-center">
+  <ul class="pagination ">
     {% for page_num in magazines.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)  %}
       {% if magazines.page == page_num %}
       <li class='page-item disabled'>
@@ -93,15 +133,15 @@
       {% endif %}
     {% endfor %}
   </ul>
+</div>
+{#</nav>#}
 
-</nav>
-
-        </div>
+{#        </div>#}
         <!-- /.col-lg-9 -->
 
-    </div>
+{#    </div>#}
     <!-- /.row -->
 
-</div>
+{#</div>#}
 <!-- /.container -->
 {% endblock %}

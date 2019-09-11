@@ -7,9 +7,9 @@ import datetime
 
 class Mpesa():
 
-    consumer_key = "7l3YMnOYrmI6fz3y9GGqwGin0kunyWtB"
-    consumer_secret = "yJpiDMnfdMVU9OQN"
-    api_URL = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    consumer_key = "CONSUMERKEY"
+    consumer_secret = "CONSUMERSECRET"
+    api_URL = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
     def __init__(self,domain,till_number):
         self.domain = domain
@@ -57,7 +57,7 @@ class Mpesa():
         print(phonenumber)
         access_token = self.register_token()
         password = self.encodeb64()
-        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        api_url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
         headers = { "Authorization": "Bearer %s" % access_token }
         request = {
           "BusinessShortCode": ""+"174379",
