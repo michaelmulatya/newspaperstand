@@ -1,5 +1,8 @@
 This Project can be viewed at https://newspaperstand.herokuapp.com
 
+A magazine store with same page payments and downloads.
+Backend works perfectly.
+
 
 Platform Used
 Front-End
