@@ -14,7 +14,7 @@ chardet==3.0.4
 Click==7.0
 colorama==0.4.0
 crypto==1.4.1
-cryptography==2.5
+cryptography==3.2
 decorator==4.3.0
 docutils==0.14
 EasyProcess==0.2.5
