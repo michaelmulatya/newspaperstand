@@ -81,7 +81,7 @@ python-editor==1.0.3
 python-jwt==2.0.1
 pytz==2018.7
 pyunpack==0.1.2
-PyYAML==3.13
+PyYAML==5.4
 requests==2.21.0
 requests-toolbelt==0.9.1
 rollbar==0.14.5
