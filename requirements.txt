@@ -78,7 +78,7 @@ Pyrebase4==4.3.0
 python-dateutil==2.7.5
 python-dotenv==0.10.1
 python-editor==1.0.3
-python-jwt==2.0.1
+python-jwt==3.3.4
 pytz==2018.7
 pyunpack==0.1.2
 PyYAML==3.13
